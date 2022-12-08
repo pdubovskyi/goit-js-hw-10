@@ -12,9 +12,21 @@ body {
   line-height: 1.5;
 }
 
+ul {
+  list-style: none;
+}
+
+ul li {
+  margin-bottom: 5px;
+}
+
 #search-box {
   font: inherit;
   padding: 8px;
   max-width: 320px;
   margin-bottom: 16px;
+}
+
+.name {
+  display: inline;
 }

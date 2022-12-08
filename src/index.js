@@ -7,13 +7,18 @@ const DEBOUNCE_DELAY = 300;
 
 const inputEl = document.querySelector('#search-box');
 const countryInfoEl = document.querySelector('.country-info');
-const listOfCountries = document.querySelector('country-list');
+const listOfCountries = document.querySelector('.country-list');
 
 inputEl.addEventListener('input', Lodash(onInputEl, DEBOUNCE_DELAY));
 
 function onInputEl(e) {
   const name = e.target.value.trim();
   console.log(name);
+
+  if (name === '') {
+    countryInfoEl.innerHTML = '';
+    listOfCountries.innerHTML = '';
+  }
 
   country(name)
     .then(renderCountry)
@@ -22,20 +27,6 @@ function onInputEl(e) {
     });
 }
 
-// country()
-//   .then(renderCountry)
-//   .catch(error => {
-//     console.log('error!');
-//   });
-
-// function country(name) {
-//   return fetch(
-//     `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
-//   ).then(responce => {
-//     return responce.json();
-//   });
-// }
-
 function renderCountry(countries) {
   console.log(countries.length);
 
@@ -43,29 +34,27 @@ function renderCountry(countries) {
     return Notiflix.Notify.info(
       'Too many matches found. Please enter a more specific name.'
     );
-  }
-
-  if (countries.length >= 2 && countries.length <= 10) {
+  } else if (countries.length >= 2 && countries.length <= 10) {
     const listMarkup = countries
       .map(({ flags, name }) => {
         return `<li>
-        <img src="${flags.svg}" alt="${name.official}" width="10">
-        <p>${name.official}</p></li>`;
+        <img src="${flags.svg}" alt="${name.official}" width="30">
+        <p class="name">${name.official}</p></li>`;
       })
       .join('');
     listOfCountries.innerHTML = listMarkup;
-    return;
-  }
-
-  const markup = countries
-    .map(({ name, capital, population, flags, languages }) => {
-      return ` <img src="${flags.svg}" alt="${name.official}" width="50"> 
-      <h1>${name.official}</h1>
+    countryInfoEl.innerHTML = '';
+  } else {
+    const markup = countries
+      .map(({ name, capital, population, flags, languages }) => {
+        return ` <img src="${flags.svg}" alt="${name.official}" width="50"> 
+      <h1 class="name">${name.official}</h1>
         <p><b>Capital:</b> ${capital}</p>
          <p><b>Population:</b> ${population}</p>
          <p><b>Languages:</b> ${Object.values(languages)}</p>`;
-    })
-    .join('');
-
-  countryInfoEl.innerHTML = markup;
+      })
+      .join('');
+    countryInfoEl.innerHTML = markup;
+    listOfCountries.innerHTML = '';
+  }
 }
