@@ -24,6 +24,8 @@ function onInputEl(e) {
     .then(renderCountry)
     .catch(error => {
       Notiflix.Notify.failure('Oops, there is no country with that name');
+      listOfCountries.innerHTML = '';
+      countryInfoEl.innerHTML = '';
     });
 }
 
